@@ -1,0 +1,39 @@
+// Code your testbench here
+// or browse Examples
+ module Booth_test ;
+  reg [15:0] data_in;
+reg start, clk;
+wire done;
+wire [31:0] OUT;
+
+   
+   BOOTH BM (ldA, ldQ, ldM, clrA, clrQ, clrM, clrff, sftA, sftQ, sftD, 
+              addsub, decr, ldcnt, data_in, clk, q0,qm1, eqz,OUT);
+  
+  controller BMC (clk, start, q0, qm1, eqz, ldA, clrA, sftA, ldQ, clrQ, sftQ, ldM, clrM, sftD, clrff, addsub, ldcnt, decr, done);
+
+initial 
+ begin 
+   clk = 1'b0; 
+   #10 start = 1'b1; 
+    #500 $finish; 
+ end 
+  
+  
+ always #5 clk = ~clk;
+  
+initial 
+ begin 
+ #20 data_in = 16'd32767; 
+ #20 data_in = 16'd32767; 
+ end 
+ 
+  initial
+   begin 
+      $dumpfile ("BOOTH.vcd");
+     $dumpvars (0, Booth_test); 
+  
+     $monitor ($time, " %d %d %d %b", BM.M,BMC.state, OUT, done); 
+ 
+   end
+endmodule
